@@ -1,0 +1,20 @@
+1. I wrote this code myself, none of it was copied verbatim or discussed with any classmates.
+
+2. I believe everything works correctly in all of the autograder's test conditions.
+
+Sources: 
+
+=General Guidance=
+Dr. John Carroll's CS-570 Lecture Notes (Course Reader)
+
+=dup2=
+http://www.cs.loyola.edu/~jglenn/702/S2005/Examples/dup2.html
+
+=/dev/null (un-set stdin)=
+https://stackoverflow.com/questions/14846768/in-c-how-do-i-redirect-stdout-fileno-to-dev-null-using-dup2-and-then-redirect
+
+=Where to put the closes for the pipe=
+https://stackoverflow.com/questions/40584034/when-and-why-do-i-have-to-close-pipe
+
+=How to write the signal handler=
+https://www.thegeekstuff.com/2012/03/catch-signals-sample-c-code/

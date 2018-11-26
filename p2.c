@@ -1,7 +1,7 @@
 /**
  * Chris Gilardi - 820489339 - cssc0101
  * CS 570 - Dr. J. Carroll
- * Program Two - Due 10/5/18 (Extra Credit Deadline)
+ * Program Four - Due 11/28/18 (Extra Credit Deadline)
  **/
 
 #include <stdio.h>
@@ -342,7 +342,7 @@ int main() {
                 
                 // IF WE REACH THIS POINT, we have read an entire input file and did NOT find the delimiter. We say as such and exit.
                 fprintf(stderr, "hereis: Did not find delimiter in file.\n");
-                exit(-100);
+                exit(4);
             afterloop:
                 // Clean up, close the read end of the pipe and then dup it to our current process's STDIN.
                 close(tempPipe[1]);
@@ -401,7 +401,7 @@ int main() {
                                 default:
                                     break;
                             }
-                            exit(-1);
+                            exit(5);
                         }
                         break;
                     }
@@ -423,7 +423,7 @@ int main() {
                         default:
                             break;
                     }
-                    exit(-1);
+                    exit(6);
                 }
                 break;
             }
@@ -541,6 +541,8 @@ int parse() {
             wordLength = 1;
         }
         
+        
+        // Word length will be < -256 if there is an escaped tilde. To find the correct length, we add 258 back to the length.
         if(wordLength < -256) {
             bool_escTilde = 1;
             wordLength = abs(wordLength + 258);
@@ -551,25 +553,27 @@ int parse() {
         // Set this char* to the correct position in argv
         newargv[wordCount] = argv + pointerLocation;
         
+        // This block replaces environment variable keys with values.
         if(wordLength < 0 && !bool_escAmp && !bool_escTilde) {
-            //printf("length %d < 0\n", wordLength);
-            // This is an environment var
+            // Get the environment variable with the name of the word we're looking at.
             char* env = getenv(argv + pointerLocation);
-//            printf("env: %s\n", env);
             if(env != NULL) {
+                // The environment variable exists.
+                // The next 4 lines copy the value of the environment variable, null terminate, and move the pointer location
                 strcpy(argv + pointerLocation, env);
                 wordLength = wordLength * -1;
                 pointerLocation += strlen(argv + pointerLocation);
                 argv[pointerLocation] = 0;
                 pointerLocation++;
+                // If this IS the name of an input file, output file, or hereis delimiter, we still have things to do, otherwise go to the next word.
                 if(!bool_inputNext && !bool_outputNext && !bool_hereisNext) {
                     wordCount++;
                     continue;
                 }
-//                printf("env. variable is used as a flag.\n");
             } else {
+                // The environment variable doesn't exist.
                 fprintf(stderr, "%s: Undefined variable.\n", argv + pointerLocation);
-                error = -69;
+                error = -16;
                 continue;
             }
         }

@@ -23,3 +23,7 @@ Special Cases:
 'echo hi > |' - This command fails because I check if the next character is a metacharacter - I do not allow metacharacters to be used as filenames.
 	- Would not work if | was any metacharacter
 
+
+Unexpected Behavior:
+
+There hereis (<<) delimiter does not work correctly when using the shell as you might use tcsh or bash. If a person uses the shell, they may not get the desired result from using the hereis delimiter. I believe this has to do with residual lines/characters on stdin after the fork (in the parent). These characters may be clear-able by using getchar() or getline(), but I thought it more important to ensure that it worked with the autograder over working with a human. I chose to left it unfinished out of fear of breaking another (required) portion of the program. Hereis works AS INTENDED when sending input to p2 using tcsh (p2 < file).

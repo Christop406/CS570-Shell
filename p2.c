@@ -153,7 +153,23 @@ int main() {
                 // Get the environment variable for $HOME
                 // TODO: HANDLE ERRORS
                 char* homeDir = getenv("HOME");
-                chdir(homeDir);
+                if(chdir(homeDir) < 0) {
+                    switch (errno) {
+                        case EACCES: // permission denied
+                            fprintf(stderr, "cd: %s: permission denied.\n", homeDir);
+                            break;
+                        case ENOENT: // does not name existing directory
+                            fprintf(stderr, "cd: %s is not a file or directory.\n", homeDir);
+                            break;
+                        case ENOTDIR: // The file is not a directory
+                            fprintf(stderr, "cd: %s is not a directory.\n", homeDir);
+                            break;
+                        default: // Unknown error
+                            fprintf(stderr, "cd: an unknown error has occurred.\n");
+                            break;
+                    }
+                    continue;
+                }
             } else if(numArgs > 2) {
                 // If there is more than one argument after 'cd', throw an error.
                 fprintf(stderr, "%s", "cd: Too many arguments.\n");
@@ -806,8 +822,19 @@ void handleMultiplePipes(void) {
             }
             
             // Run the command at index numPipes - pipeIndex (i.e. work backwards).
-            // TODO: HANDLE ERRORS
-            execvp(newargv[pipeArgsIndexes[numPipes - pipeIndex]], newargv + pipeArgsIndexes[numPipes - pipeIndex]);
+            if(execvp(newargv[pipeArgsIndexes[numPipes - pipeIndex]], newargv + pipeArgsIndexes[numPipes - pipeIndex]) < 0) {
+                fprintf(stderr, "error: Unable to start program \'%s\': ", newargv[0]);
+                switch (errno) {
+                    case EACCES:
+                        fprintf(stderr, "permission denied.\n");
+                        break;
+                    case ENOENT:
+                        fprintf(stderr, "file not found.\n");
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
     }
     
@@ -822,8 +849,19 @@ void handleMultiplePipes(void) {
     }
     
     // Run the first command, let's get this show rolling!
-    // TODO: HANDLE ERRORS
-    execvp(newargv[0], newargv);
+    if(execvp(newargv[0], newargv) < 0) {
+        fprintf(stderr, "error: Unable to start program \'%s\': ", newargv[0]);
+        switch (errno) {
+            case EACCES:
+                fprintf(stderr, "permission denied.\n");
+                break;
+            case ENOENT:
+                fprintf(stderr, "file not found.\n");
+                break;
+            default:
+                break;
+        }
+    }
 }
 
 void handleSignal(int signal) {

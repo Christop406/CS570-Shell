@@ -104,25 +104,6 @@ int getword(char* w) {
                 break;
             }
             
-            // Handle the tilde '~' character.
-            // If we are at the beginning of the word and have not already encountered a $ (perhaps this is redundant), we should replace a ~ with the user's $HOME environment variable
-            /*if(bool_isnegative == 0 && nextchar == '~' && index == 0) {
-                
-                // homedir holds the string (char*) representation of $HOME, so that we can use it later to concatenate into the word string.
-                char *homedir = getenv("HOME");
-                
-                // Index used for inner loop
-                int i;
-                
-                // This loop is used to concatenate the $HOME string, character-by-character, into the current *w pointer (to be used in the calling function)
-                // On each pass, it will add a character onto this string, and increment index++, meaning the loop can continue exactly from the end of this loop on the next character, no other addition necessary.
-                for(i = 0; homedir[i] !='\0'; i++) {
-                    w[index] = homedir[i];
-                    index++;
-                }
-                continue;
-            }*/
-            
             // Check for ';', newline, and EOF
             // If we get one of these after a word has started, put it back so it can be parsed later [SEE 'A NOTE ON UNGETC()' above].
             // If they are first, simply set w to a null character.

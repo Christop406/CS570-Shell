@@ -428,10 +428,21 @@ int main() {
                 break;
             }
         } else {
-            if(bool_encounteredHereis) {
-                // Close the hereis pipe in the parent, if it's open.
-                close(tempPipe[1]);
-                close(tempPipe[0]);
+            if(bool_encounteredHereis && !bool_encounteredInput) {
+                // Storage required to check each line.
+                char* line = NULL;
+                size_t len = 0;
+                ssize_t nread;
+                // Read the entire file.
+                while((nread = getline(&line, &len, stdin)) != -1) {
+                    // Null-terminate each line, which removes the \n character (for checking).
+                    line[strlen(line) - 1] = '\0';
+                    // If this line exactly equals the delimiter, break out of the inner loop.
+                    if(strcmp(line, hereis_delimiter) == 0) {
+                        goto after;
+                    }
+                }
+            after:;
             }
             // If parse() found an & and set bool_nowait to true, we want to print the process name and continue.
             if(bool_nowait) {

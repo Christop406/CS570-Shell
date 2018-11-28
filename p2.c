@@ -48,12 +48,9 @@ char* hereis_delimiter;
 int pipeArgsIndexes[10];
 int numPipes = 0;
 // The pipe is defined here to avoid re-creating it every time. It is perfectly OK to re-use this pipe for any subsequent pipe commands.
-// DEBUG: SET TO 20 SO WE CAN HANDLE 10 PIPES
 int pipeFileDescriptor[20];
 
 int tempPipe[2];
-
-int DEBUG = 0; // REMOVE THIS
 
 /**
  * FLAGS (note: for each 'bool_' variable, 0 == FALSE, !0 == TRUE
